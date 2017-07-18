@@ -20,13 +20,15 @@ var renderSomethingOnThePage = function(message) {
    * but we dont want all of this HTML to be in the `el.append` function call.
    *
    * Instead, we break it out first into a variable called `$element`.
+   
    * Now, we can call the `el.append` method with the `$element` variable.
    *
    * This also allows us to space out the html as we're used to,
    * with indents to make it easier to read.
    */
+  
   var html = [
-    '<div>',
+    '<div class = message>',
       '<span>',
         message,
       '</span>',
@@ -101,7 +103,7 @@ var Message = Backbone.Model.extend({
      * Putting it into the initialize function let's us be sure that
      * all models that are created will have event listeners on them.
      */
-    this.on(YOUR CODE HERE);
+    this.on('change', () => renderSomethingOnThePage('Message created!'));
     /* It is your turn to write the event handler.
      *
      * Make an event listener that will listen for a `change` in this model's
@@ -142,6 +144,7 @@ var myNewMessage = new Message();
 // ...and then make a change on that model to see it render
 myNewMessage.set({message: 'someMessage'});
 
+myNewMessage.alertThisMessage();
 
 /* Once the model is rendering on the `change` event, move on to step 3!
  *
@@ -172,5 +175,6 @@ myNewMessage.set({message: 'someMessage'});
  * To call `alertThisMessage` on the object: `myNewMessage.alertThisMessage();`
  */
     </script>
+    <link rel='stylesheet' type = 'text/css' href='styles.css' />
   </body>
 </html>

@@ -26,16 +26,24 @@ var Comment = Backbone.Model.extend({
   initialize: function(message) {
     /* Set the initial values for `votes` to 0 and `message` to the message.
      * Remember to use setters when working with attributes! */
+    this.set('message', message);
+    this.set('votes', 0);
   },
   votes: function() {
+    return this.get('votes');
     /* Return the votes attribute on this model.
      * Remember to use a getter when working with attributes! */
   },
   upvote: function(){
     // Set the `votes` attribute to the current vote count plus one.
+    this.set('votes', this.get('votes') + 1);
+  },
+  downvote: function() {
+    this.set('votes', this.get('votes') - 1);
   }
   // Add a downvote function; don't forget the comma above.
 });
+
 
 /* - Backbone VIEW ------------------------------------------------------------
  * Now that we have a model, we'll want a view to display it.
@@ -54,6 +62,7 @@ var CommentView = Backbone.View.extend({
    * every comment's view to have an event listener on `change` so that
    * it will re-render itself if the `votes` attribute changes. */
   initialize: function() {
+      console.log('enter initialize');
     this.model.on('change:votes', function() {
     /* Let's break down the line above:
      * - `this`           => the CommentView instance
@@ -85,6 +94,7 @@ var CommentView = Backbone.View.extend({
       '<div>',
         '<span class="votes">',
           this.model.get('votes'),
+          ':) ',
         '<span>',
         '<span class="comment">',
           this.model.get('message'),
@@ -106,8 +116,9 @@ var CommentView = Backbone.View.extend({
      * using `this.$el`.
      *
      * Rendering now becomes as simple as setting the $el's html: */
-    return this.$el.html(html);
-
+     
+    var a = this.$el.html(html);
+    return a;
     /* We're also returning the $el. It's already been modified and updated,
      * but it is not on the page yet.
      * In a couple lines, we will put it onto the page; then we can modify it
@@ -117,14 +128,21 @@ var CommentView = Backbone.View.extend({
   }
 });
 
+
 // That's about it! Let's take it for a spin:
 
 /* Create a new comment model using our Comment class,
  * passing the first message as an argument: */
 var comment = new Comment('This is a message');
-
-// Create a view, and associate it with this model:
 var commentView = new CommentView({ model: comment });
+
+console.log(comment.get('votes'))
+comment.upvote();
+
+console.log(comment.get('votes'))
+// Create a view, and associate it with this model:
+//var commentView = new CommentView({ model: comment });
+
 
 /* Notice that we instantiate the view with an object {model: comment}.
  * This is called an options hash. With views, if we pass an object with
@@ -137,8 +155,8 @@ var commentView = new CommentView({ model: comment });
  */
 
 // Append the view to the page. This is why we returned html from `render`:
-// $('body').append(commentView.render());
-
+$('body').append(commentView.render());
+setInterval(() => comment.upvote(), 1000)
 /* The number of votes should be 0.
  * We set that as the initial default value in the comment model.
  *
