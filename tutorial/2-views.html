@@ -62,7 +62,7 @@ var CommentView = Backbone.View.extend({
    * every comment's view to have an event listener on `change` so that
    * it will re-render itself if the `votes` attribute changes. */
   initialize: function() {
-      console.log('enter initialize');
+    // console.log('enter initialize');
     this.model.on('change:votes', function() {
     /* Let's break down the line above:
      * - `this`           => the CommentView instance
@@ -72,11 +72,12 @@ var CommentView = Backbone.View.extend({
      * - `'change:votes'` => this first argument defines what to listen for
      *   - We can listen for a change on a specific attribute using a colon.
      * - `function`       => this is the callback for this event listener */
-      this.render()
+
     /*   - Usually, we can't rely on `this` being what we think it is in
      *      an event listener. However, Backbone allows us to specify what
      *      `this` will be in the third argument of `model.on`,
      *      as we will do in the next line: */
+      this.render()
     }, this);
     /* We've passed in `this` from the the outer scope into the event listener,
      * making it so that `this` is bound to the individual comment's view,
@@ -94,7 +95,7 @@ var CommentView = Backbone.View.extend({
       '<div>',
         '<span class="votes">',
           this.model.get('votes'),
-          ':) ',
+          ': ',
         '<span>',
         '<span class="comment">',
           this.model.get('message'),
@@ -117,8 +118,7 @@ var CommentView = Backbone.View.extend({
      *
      * Rendering now becomes as simple as setting the $el's html: */
      
-    var a = this.$el.html(html);
-    return a;
+    return this.$el.html(html);
     /* We're also returning the $el. It's already been modified and updated,
      * but it is not on the page yet.
      * In a couple lines, we will put it onto the page; then we can modify it
@@ -134,15 +134,9 @@ var CommentView = Backbone.View.extend({
 /* Create a new comment model using our Comment class,
  * passing the first message as an argument: */
 var comment = new Comment('This is a message');
-var commentView = new CommentView({ model: comment });
 
-console.log(comment.get('votes'))
-comment.upvote();
-
-console.log(comment.get('votes'))
 // Create a view, and associate it with this model:
-//var commentView = new CommentView({ model: comment });
-
+var commentView = new CommentView({ model: comment });
 
 /* Notice that we instantiate the view with an object {model: comment}.
  * This is called an options hash. With views, if we pass an object with
@@ -156,14 +150,15 @@ console.log(comment.get('votes'))
 
 // Append the view to the page. This is why we returned html from `render`:
 $('body').append(commentView.render());
-setInterval(() => comment.upvote(), 1000)
+// setInterval(() => comment.upvote(), 1000)
+
 /* The number of votes should be 0.
  * We set that as the initial default value in the comment model.
  *
  * Let's change it and see our eventlistener in action.
  * Uncomment the line below and reload the page,
  * and it should say '1' to the left of the comment. */
-// comment.upvote();
+comment.upvote();
 
 /* play with this in your console as well.
  * You can modify the comment object in the same way we just did:
@@ -175,6 +170,8 @@ setInterval(() => comment.upvote(), 1000)
  * Try voting up and voting down a couple of times and
  * watch the eventlistener auto update the view.  Pretty cool, eh?
  */
+
+ comment.downvote();
     </script>
   </body>
 </html>
